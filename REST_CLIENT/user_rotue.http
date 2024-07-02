@@ -1,0 +1,15 @@
+###
+
+// Get Users
+GET http://localhost:3000/api/users/
+
+### Post Users
+
+POST http://localhost:3000/api/users/
+Content-Type: application/json
+
+{
+    "name": "mgmg",
+    "email" : "mg@gmail.com",
+    "age":12
+}
