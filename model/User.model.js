@@ -15,6 +15,9 @@ const UserSchema = new schema({
       type: String,
       required: true,
    },
+   image: {
+      type: String,
+   },
    bookmark: {
       type: Array,
    },

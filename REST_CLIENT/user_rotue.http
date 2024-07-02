@@ -1,15 +1,57 @@
-###
+### test connection
 
-// Get Users
 GET http://localhost:3000/api/users/
 
-### Post Users
+### user find
 
-POST http://localhost:3000/api/users/
+GET http://localhost:3000/api/users/?id=6683e0e7f10f6449f222218e
+
+### user list
+
+GET http://localhost:3000/api/users/list
+
+### register users
+
+POST http://localhost:3000/api/users/register
 Content-Type: application/json
+Accept: application/json
 
 {
-    "name": "mgmg",
+    "name" : "mgmg",
     "email" : "mg@gmail.com",
-    "age":12
+    "password" : "12345",
+    "role" : "user",
+    "image" : "profie image"
 }
+
+### login user
+
+POST http://localhost:3000/api/users/login
+Content-Type: application/json
+Accept: application/json
+
+{
+   "email": "mg@gmail.com",
+   "password" :"12345"
+}
+
+### verify
+
+GET http://localhost:3000/api/users/verify
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2ODNmNmM3NmJjMjc0OGYyM2Y2YWM2ZCIsIm5hbWUiOiJtZ21nIiwiZW1haWwiOiJtZ0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCQvLnZJSURVdmtMaHBHNk5kNmg5UWRld1VUNmhEZTdsN05tRmFuOTF2U2twUmwwZ0hYSXhqLiIsImltYWdlIjoicHJvZmllIGltYWdlIiwiYm9va21hcmsiOltdLCJyb2xlIjoidXNlciIsIl9fdiI6MH0sImlhdCI6MTcxOTkyNDQ0M30.a6BSnWWTlQSp9oJVc8rXBWsmWFRMs-PCr0UWvFWF_q4
+
+### update
+
+PUT http://localhost:3000/api/users/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2ODNmNmM3NmJjMjc0OGYyM2Y2YWM2ZCIsIm5hbWUiOiJtZ21nIiwiZW1haWwiOiJtZ0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCQvLnZJSURVdmtMaHBHNk5kNmg5UWRld1VUNmhEZTdsN05tRmFuOTF2U2twUmwwZ0hYSXhqLiIsImltYWdlIjoicHJvZmllIGltYWdlIiwiYm9va21hcmsiOltdLCJyb2xlIjoidXNlciIsIl9fdiI6MH0sImlhdCI6MTcxOTkyNDQ0M30.a6BSnWWTlQSp9oJVc8rXBWsmWFRMs-PCr0UWvFWF_q4
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name" : "Alice"
+}
+
+### user delete 
+
+DELETE http://localhost:3000/api/users/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2ODNmNmM3NmJjMjc0OGYyM2Y2YWM2ZCIsIm5hbWUiOiJtZ21nIiwiZW1haWwiOiJtZ0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCQvLnZJSURVdmtMaHBHNk5kNmg5UWRld1VUNmhEZTdsN05tRmFuOTF2U2twUmwwZ0hYSXhqLiIsImltYWdlIjoicHJvZmllIGltYWdlIiwiYm9va21hcmsiOltdLCJyb2xlIjoidXNlciIsIl9fdiI6MH0sImlhdCI6MTcxOTkyNDQ0M30.a6BSnWWTlQSp9oJVc8rXBWsmWFRMs-PCr0UWvFWF_q4
