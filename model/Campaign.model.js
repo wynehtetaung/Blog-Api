@@ -13,6 +13,10 @@ const campaignSchema = new schema({
       type: Date,
       default: Date.now(),
    },
+   updated: {
+      type: Date,
+      default: Date.now(),
+   },
 });
 
 module.exports = mongoose.model("campaigns", campaignSchema);

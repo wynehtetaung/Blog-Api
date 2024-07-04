@@ -29,22 +29,16 @@ const postSchema = new schema({
       type: Array,
       required: true,
    },
-   review: {
-      type: String,
-   },
    product_description: {
       type: String,
-      required: true,
    },
    shop_description: {
       type: String,
-      required: true,
    },
    owner: {
       type: schema.Types.ObjectId,
       ref: "users",
    },
-
    created: {
       type: Date,
       default: Date.now(),

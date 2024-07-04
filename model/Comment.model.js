@@ -11,8 +11,8 @@ const commentSchema = new schema({
       required: true,
    },
    commenter: {
-      type: schema.Types.ObjectId,
-      ref: "users",
+      type: Object,
+      required: true,
    },
    created: {
       type: Date,

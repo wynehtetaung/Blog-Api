@@ -3,8 +3,28 @@ const Post = require("../model/Post.model");
 const { auth } = require("../middleware/auth");
 
 router.get("/", async (req, res) => {
-   const posts = await Post.find().sort({ _id: -1 });
-   return res.status(200).json({
+   const posts = await Post.aggregate([
+      {
+         $lookup: {
+            from: "users",
+            localField: "owner",
+            foreignField: "_id",
+            as: "owner",
+         },
+      },
+      {
+         $lookup: {
+            from: "comments",
+            localField: "_id",
+            foreignField: "post",
+            as: "comment",
+         },
+      },
+
+      { $unwind: "$owner" },
+      { $sort: { _id: -1 } },
+   ]);
+   res.status(200).json({
       success: true,
       message: "post list",
       resource: posts,
@@ -14,7 +34,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
    const { id } = req.params;
    const post = await Post.findById(id);
-   return res.status(200).json({
+   res.status(200).json({
       success: true,
       message: "post",
       resource: post,
@@ -30,7 +50,6 @@ router.post("/", auth, async (req, res) => {
       close_hour,
       rating,
       image,
-      review,
       product_description,
       shop_description,
    } = req.body;
@@ -49,7 +68,6 @@ router.post("/", auth, async (req, res) => {
       close_hour,
       rating,
       image,
-      review,
       product_description,
       shop_description,
       owner: _id,
@@ -107,7 +125,7 @@ router.put("/:id", auth, async (req, res) => {
    });
 
    const post = await Post.findById(id);
-   return res.status(200).json({
+   res.status(200).json({
       success: true,
       message: "post updated!",
       resource: post,
@@ -123,7 +141,7 @@ router.delete("/:id", auth, async (req, res) => {
       });
    }
    await Post.findByIdAndDelete(id);
-   return res.status(204).json("deleted");
+   res.status(204).json("deleted");
 });
 
 module.exports = { postRouter: router };

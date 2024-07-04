@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../model/User.model");
+const Comment = require("../model/Comment.model");
+const Post = require("../model/Post.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { auth } = require("../middleware/auth");
@@ -36,8 +38,12 @@ router.get("/verify", auth, (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-   const { name, email, password, role, image } = req.body;
-   if (!name || !email || !password || !role)
+   const { name, email, password, image } = req.body;
+   let role;
+   const { admin } = req.query;
+   if (admin || admin === process.env.ADMIN_KEY) role = "admin";
+   else role = "user";
+   if (!name || !email || !password)
       return res.status(400).json({ success: false, message: "required!" });
    const hash = await bcrypt.hash(password, 10);
    const user = new User({
@@ -117,6 +123,53 @@ router.put("/", auth, async (req, res) => {
    }
    const user = await User.findById(_id);
    res.status(200).json(user);
+});
+
+router.post("/:pid/comment", auth, async (req, res) => {
+   const { pid } = req.params;
+   const { user } = res.locals.user;
+   const { comment } = req.body;
+   try {
+      await Post.findById(pid);
+   } catch (error) {
+      console.log(new Error(error).message);
+   }
+
+   new Comment({
+      post: pid,
+      comment,
+      commenter: user,
+   })
+      .save()
+      .then((result) => {
+         return res.status(201).json({
+            success: true,
+            message: "comment created!",
+            resource: result,
+         });
+      })
+      .catch((e) => {
+         return res.status(500).json({
+            success: false,
+            message: "comment create fail!",
+            error: e,
+         });
+      });
+});
+
+router.delete("/:pid/comment/:cid", auth, async (req, res) => {
+   const { pid, cid } = req.params;
+   try {
+      await Post.findById(pid);
+   } catch (error) {
+      res.status(404).json({
+         success: false,
+         message: "post not found!",
+      });
+   }
+
+   await Comment.findByIdAndDelete(cid);
+   res.status(204).json("deleted");
 });
 
 router.delete("/:id", auth, async (req, res) => {

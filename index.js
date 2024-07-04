@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const { userRouter } = require("./router/user.router");
 const { postRouter } = require("./router/post.router");
+const { campaignRouter } = require("./router/campaign.router");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -14,6 +15,7 @@ app.use(cors());
 
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
+app.use("/api/campaign", campaignRouter);
 
 mongoose
    .connect(process.env.MONGO_LOCAL_STR)
