@@ -1,0 +1,603 @@
+{
+	"info": {
+		"_postman_id": "06f2afe0-92be-401f-857e-e2b42334807c",
+		"name": "blog-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27437409"
+	},
+	"item": [
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "test connect",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user with id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/users/?id=6684c8dbffebe6a2dfdb23a5",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "6684c8dbffebe6a2dfdb23a5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/users/list",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"Admin\",\n    \"email\" : \"admin@gmail.com\",\n    \"password\" : \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/users/register?admin=admin2024",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"register"
+							],
+							"query": [
+								{
+									"key": "admin",
+									"value": "admin2024"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"Bob\",\n    \"email\" : \"bob@gmail.com\",\n    \"password\" : \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/users/register",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"admin@gmail.com\",\n    \"password\" : \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/users/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user verify",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2ODY2NmY1Yzc2NzNmNGVhNDZlZmRjYSIsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkRVVaLkFrTlNLdGN3UFlkL1F3Ti5VZWVQOWQ0R2g0VHdTVjV1MjdFbllqamh1LmQ1NlBKSGEiLCJib29rbWFyayI6W10sInJvbGUiOiJhZG1pbiIsIl9fdiI6MH0sImlhdCI6MTcyMDA4NTAyMCwiZXhwIjoxNzIwMTcxNDIwfQ.LZ9Aok_u9XJI53fMaHVZQbIRlx32kMViEzzanIHaCSE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/users/verify",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2ODRjOGRiZmZlYmU2YTJkZmRiMjNhNSIsIm5hbWUiOiJtZ21nIiwiZW1haWwiOiJtZ0BnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCQxUTVzY3IvdC9UaGxUdTFmQnBybmRlWW9tbEVIOGZjNnBnVFF2VWxYR3FLLkowN2Z2Wi4vTyIsImltYWdlIjoicHJvZmlsZSBpbWFnZSIsImJvb2ttYXJrIjpbXSwicm9sZSI6InVzZXIiLCJfX3YiOjB9LCJpYXQiOjE3MjAwNzE2NTgsImV4cCI6MTcyMDE1ODA1OH0.IHKQfEGfrUFhBZqaYzDxy5laInSvn_Rn01moUmZ_ka0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\" : \"ko ko\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/users/668666dcc7673f4ea46efdc8",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"668666dcc7673f4ea46efdc8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2ODY0YTcyZWYzNzNhODdhYTI4NjRlMSIsIm5hbWUiOiJCb2IiLCJlbWFpbCI6ImJvYkBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRaeUtYUDQ2RHdxaEgycGtvaS9qd0pPaVBEZ1ZtclVGcDFwVmF4TUlUTzM0bldjc2tENS9NdSIsImJvb2ttYXJrIjpbXSwicm9sZSI6InVzZXIiLCJfX3YiOjB9LCJpYXQiOjE3MjAwODE4MDcsImV4cCI6MTcyMDE2ODIwN30.A5r5wFhirwU_6IbJy_BOB4c1EdAGoPaT8wKblvHDqNQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\" : \"I like this post.new\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/users/66864a90ef373a87aa2864e4/comment",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"66864a90ef373a87aa2864e4",
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete comment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "66865fccb3ad0e6b8e62e24e",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/users/66864a90ef373a87aa2864e4/comment/66865fccb3ad0e6b8e62e24e",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"66864a90ef373a87aa2864e4",
+								"comment",
+								"66865fccb3ad0e6b8e62e24e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "post",
+			"item": [
+				{
+					"name": "post list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2ODY0YTcyZWYzNzNhODdhYTI4NjRlMSIsIm5hbWUiOiJCb2IiLCJlbWFpbCI6ImJvYkBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRaeUtYUDQ2RHdxaEgycGtvaS9qd0pPaVBEZ1ZtclVGcDFwVmF4TUlUTzM0bldjc2tENS9NdSIsImJvb2ttYXJrIjpbXSwicm9sZSI6InVzZXIiLCJfX3YiOjB9LCJpYXQiOjE3MjAwNzY5MjYsImV4cCI6MTcyMDE2MzMyNn0.soHjGQbsYTVT3D_8XhwQZWkazzHqWZoe6JGKfQbHlfI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\" : \"add new post from bob\",\n      \"address\" : \"add new address\",\n      \"phone\" : \"add new phone\",\n      \"open_hour\" : \"add new open hour\",\n      \"close_hour\" : \"add new close hour\",\n      \"rating\" : 1,\n      \"image\" : [],\n      \"review\" : \"add new review\",\n      \"product_description\" : \"add new description\",\n      \"shop_description\" : \"add new show\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/posts",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\" : \"update2 post\",\n     \"phone\" : \"update phone\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/posts/66857b4707527ed7f1d2f583",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"posts",
+								"66857b4707527ed7f1d2f583"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/posts/66856bfbcec83690ca544b2c",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"posts",
+								"66856bfbcec83690ca544b2c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "post with id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/posts/66857b4707527ed7f1d2f583",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"posts",
+								"66857b4707527ed7f1d2f583"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "campaign",
+			"item": [
+				{
+					"name": "create campaign",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2ODY2NmY1Yzc2NzNmNGVhNDZlZmRjYSIsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkRVVaLkFrTlNLdGN3UFlkL1F3Ti5VZWVQOWQ0R2g0VHdTVjV1MjdFbllqamh1LmQ1NlBKSGEiLCJib29rbWFyayI6W10sInJvbGUiOiJhZG1pbiIsIl9fdiI6MH0sImlhdCI6MTcyMDA4NTAyMCwiZXhwIjoxNzIwMTcxNDIwfQ.LZ9Aok_u9XJI53fMaHVZQbIRlx32kMViEzzanIHaCSE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\" :\"new campaign\",\n    \"post\" : [\"66864a90ef373a87aa2864e4\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/campaign",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"campaign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "campaign list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/campaign",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"campaign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update campaign",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY2ODY2NmY1Yzc2NzNmNGVhNDZlZmRjYSIsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkRVVaLkFrTlNLdGN3UFlkL1F3Ti5VZWVQOWQ0R2g0VHdTVjV1MjdFbllqamh1LmQ1NlBKSGEiLCJib29rbWFyayI6W10sInJvbGUiOiJhZG1pbiIsIl9fdiI6MH0sImlhdCI6MTcyMDA4NTAyMCwiZXhwIjoxNzIwMTcxNDIwfQ.LZ9Aok_u9XJI53fMaHVZQbIRlx32kMViEzzanIHaCSE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"post\" : [\"66864a90ef373a87aa2864e4\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/campaign/6686970b2d6907b05dad0287",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"campaign",
+								"6686970b2d6907b05dad0287"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete campaign",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
