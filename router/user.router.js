@@ -32,11 +32,13 @@ router.get("/list", async (req, res) => {
 });
 
 router.get("/verify", auth, (req, res) => {
-   return res.json(res.locals.user.user);
+   return res.json(res.locals.user);
 });
 
 router.post("/register", async (req, res) => {
    const { name, email, password, role, image } = req.body;
+   if (!name || !email || !password || !role)
+      return res.status(400).json({ success: false, message: "required!" });
    const hash = await bcrypt.hash(password, 10);
    const user = new User({
       name,
@@ -76,7 +78,9 @@ router.post("/login", async (req, res) => {
    const user = await User.findOne({ email });
    if (user) {
       if (await bcrypt.compare(password, user.password)) {
-         const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY);
+         const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY, {
+            expiresIn: "24h",
+         });
          return res.status(200).json({
             success: true,
             message: "login success!",
@@ -91,25 +95,40 @@ router.post("/login", async (req, res) => {
 });
 
 router.put("/", auth, async (req, res) => {
+   if (res.locals.user.success === false) {
+      return res.status(404).json({
+         success: false,
+         message: res.locals.user.message,
+      });
+   }
    const { _id } = res.locals.user.user;
-   const { name, password } = req.body;
+   const { name, password, image, email, bookmark } = req.body;
    if (name) {
-      await User.findByIdAndUpdate(_id, { name: name });
+      await User.findByIdAndUpdate(_id, { name });
    } else if (password) {
       const hash = await bcrypt.hash(password, 10);
       await User.findByIdAndUpdate(_id, { password: hash });
+   } else if (image) {
+      await User.findByIdAndUpdate(_id, { image });
+   } else if (email) {
+      await User.findByIdAndUpdate(_id, { email });
+   } else if (bookmark) {
+      await User.findByIdAndUpdate(_id, { bookmark });
    }
    const user = await User.findById(_id);
    res.status(200).json(user);
 });
 
-router.delete("/", auth, async (req, res) => {
-   const { _id } = res.locals.user.user;
-   await User.findByIdAndDelete(_id);
-   res.status(204).json({
-      success: true,
-      message: "Deleted!",
-   });
+router.delete("/:id", auth, async (req, res) => {
+   if (res.locals.user.success === false) {
+      return res.status(404).json({
+         success: false,
+         message: res.locals.user.message,
+      });
+   }
+   const { id } = req.params;
+   await User.findByIdAndDelete(id);
+   res.status(204).json("deleted");
 });
 
 module.exports = { userRouter: router };

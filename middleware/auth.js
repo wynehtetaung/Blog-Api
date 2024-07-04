@@ -7,7 +7,10 @@ function auth(req, res, next) {
    if (!token) {
       return res.status(400).json({ message: "token required" });
    }
-   const user = jwt.decode(token, process.env.JWT_SECRET_KEY);
+   const user = jwt.verify(token, process.env.JWT_SECRET_KEY, (err, rtn) => {
+      if (err) return { success: false, message: "token expired" };
+      return rtn;
+   });
    if (!user) {
       return res.status(401).json({ message: "incorrect token" });
    }
