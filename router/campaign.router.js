@@ -2,6 +2,9 @@ const router = require("express").Router();
 const Campaign = require("../model/Campaign.model");
 const Post = require("../model/Post.model");
 const { auth } = require("../middleware/auth");
+const { checkUser } = require("../middleware/checkUser");
+const { admin } = require("../middleware/admin");
+const { checkCampaign } = require("../middleware/checkCampign");
 
 router.get("/", async (req, res) => {
    const campaign = await Campaign.find().sort({ _id: -1 });
@@ -12,8 +15,7 @@ router.get("/", async (req, res) => {
    });
 });
 
-router.post("/", auth, async (req, res) => {
-   const { user } = res.locals.user;
+router.post("/", auth, checkUser, admin, async (req, res) => {
    const posts = await Post.find();
    const { title, post } = req.body;
    let setPost = [];
@@ -22,12 +24,7 @@ router.post("/", auth, async (req, res) => {
          setPost.push(posts.find((post) => post._id == p));
       });
    })();
-   if (user.role.toLocaleLowerCase() !== "admin") {
-      return res.status(401).json({
-         success: false,
-         message: "not allowed",
-      });
-   }
+
    new Campaign({
       title,
       products: setPost,
@@ -49,16 +46,10 @@ router.post("/", auth, async (req, res) => {
       });
 });
 
-router.put("/:id", auth, async (req, res) => {
-   const { user } = res.locals.user;
+router.put("/:id", auth, checkUser, admin, async (req, res) => {
    const { id } = req.params;
    const { title, post } = req.body;
-   if (user.role.toLocaleLowerCase() !== "admin") {
-      return res.status(401).json({
-         success: false,
-         message: "not allowed",
-      });
-   }
+
    if (title) {
       await Campaign.findByIdAndUpdate(id, { title });
    } else if (post) {
@@ -80,10 +71,17 @@ router.put("/:id", auth, async (req, res) => {
    });
 });
 
-router.delete("/:id", auth, async (req, res) => {
-   const { id } = req.params;
-   await Campaign.findByIdAndDelete(id);
-   res.status(204).json("deleted!");
-});
+router.delete(
+   "/:id",
+   auth,
+   checkUser,
+   admin,
+   checkCampaign,
+   async (req, res) => {
+      const { id } = req.params;
+      await Campaign.findByIdAndDelete(id);
+      res.status(204).json("deleted!");
+   }
+);
 
 module.exports = { campaignRouter: router };

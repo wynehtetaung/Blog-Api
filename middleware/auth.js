@@ -8,7 +8,10 @@ function auth(req, res, next) {
       return res.status(400).json({ message: "token required" });
    }
    const user = jwt.verify(token, process.env.JWT_SECRET_KEY, (err, rtn) => {
-      if (err) return { success: false, message: "token expired" };
+      if (err)
+         return res
+            .status(400)
+            .json({ success: false, message: "token expired" });
       return rtn;
    });
    if (!user) {

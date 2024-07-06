@@ -1,6 +1,11 @@
 const router = require("express").Router();
 const Post = require("../model/Post.model");
+const User = require("../model/User.model");
+const Campaign = require("../model/Campaign.model");
+const Comment = require("../model/Comment.model");
 const { auth } = require("../middleware/auth");
+const { checkPost } = require("../middleware/checkPost");
+const { checkUser } = require("../middleware/checkUser");
 
 router.get("/", async (req, res) => {
    const posts = await Post.aggregate([
@@ -24,6 +29,7 @@ router.get("/", async (req, res) => {
       { $unwind: "$owner" },
       { $sort: { _id: -1 } },
    ]);
+
    res.status(200).json({
       success: true,
       message: "post list",
@@ -31,7 +37,7 @@ router.get("/", async (req, res) => {
    });
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", checkPost, async (req, res) => {
    const { id } = req.params;
    const post = await Post.findById(id);
    res.status(200).json({
@@ -41,14 +47,13 @@ router.get("/:id", async (req, res) => {
    });
 });
 
-router.post("/", auth, async (req, res) => {
+router.post("/", auth, checkUser, async (req, res) => {
    const {
       title,
       address,
       phone,
       open_hour,
       close_hour,
-      rating,
       image,
       product_description,
       shop_description,
@@ -66,7 +71,6 @@ router.post("/", auth, async (req, res) => {
       phone,
       open_hour,
       close_hour,
-      rating,
       image,
       product_description,
       shop_description,
@@ -89,7 +93,7 @@ router.post("/", auth, async (req, res) => {
       });
 });
 
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", auth, checkPost, checkUser, async (req, res) => {
    const { id } = req.params;
    const {
       title,
@@ -97,7 +101,6 @@ router.put("/:id", auth, async (req, res) => {
       phone,
       open_hour,
       close_hour,
-      rating,
       image,
       review,
       product_description,
@@ -116,7 +119,6 @@ router.put("/:id", auth, async (req, res) => {
       phone,
       open_hour,
       close_hour,
-      rating,
       image,
       review,
       product_description,
@@ -132,7 +134,7 @@ router.put("/:id", auth, async (req, res) => {
    });
 });
 
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", auth, checkUser, checkPost, async (req, res) => {
    const { id } = req.params;
    if (res.locals.user.success === false) {
       return res.status(404).json({
@@ -140,6 +142,12 @@ router.delete("/:id", auth, async (req, res) => {
          message: res.locals.user.message,
       });
    }
+
+   const comment = await Comment.find();
+   const filterComment = comment.filter((pid) => pid.post == id);
+   filterComment.map(async (fc) => {
+      await Comment.findByIdAndDelete(fc._id);
+   });
    await Post.findByIdAndDelete(id);
    res.status(204).json("deleted");
 });

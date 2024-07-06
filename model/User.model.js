@@ -18,6 +18,14 @@ const UserSchema = new schema({
    image: {
       type: String,
    },
+   rating_post: [
+      {
+         postId: {
+            type: schema.Types.ObjectId,
+            ref: "posts",
+         },
+      },
+   ],
    bookmark: {
       type: Array,
    },

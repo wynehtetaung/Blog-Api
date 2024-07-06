@@ -20,10 +20,16 @@ const postSchema = new schema({
    },
    close_hour: {
       type: String,
-      required: true,
    },
-   rating: {
+   given_rating: [
+      {
+         user: Object,
+         count: Number,
+      },
+   ],
+   total_rating: {
       type: Number,
+      default: 0,
    },
    image: {
       type: Array,

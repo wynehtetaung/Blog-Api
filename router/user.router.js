@@ -6,6 +6,8 @@ const Post = require("../model/Post.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { auth } = require("../middleware/auth");
+const { checkPost } = require("../middleware/checkPost");
+const { checkUser } = require("../middleware/checkUser");
 
 router.get("/", async (req, res) => {
    const { id } = req.query;
@@ -33,7 +35,7 @@ router.get("/list", async (req, res) => {
    });
 });
 
-router.get("/verify", auth, (req, res) => {
+router.get("/verify", auth, checkUser, (req, res) => {
    return res.json(res.locals.user);
 });
 
@@ -81,9 +83,15 @@ router.post("/login", async (req, res) => {
          message: "email & password required!",
       });
    }
-   const user = await User.findOne({ email });
-   if (user) {
-      if (await bcrypt.compare(password, user.password)) {
+   const findUser = await User.findOne({ email });
+   if (findUser) {
+      const user = {
+         name: findUser.name,
+         email: findUser.email,
+         role: findUser.role,
+         image: findUser.image,
+      };
+      if (await bcrypt.compare(password, findUser.password)) {
          const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY, {
             expiresIn: "24h",
          });
@@ -100,7 +108,58 @@ router.post("/login", async (req, res) => {
    });
 });
 
-router.put("/", auth, async (req, res) => {
+router.put(
+   "/:pid/give-rating",
+   auth,
+   checkPost,
+   checkUser,
+   async (req, res) => {
+      const { pid } = req.params;
+      const authUser = res.locals.user.user;
+      const { count } = req.body;
+      const user = {
+         _id: authUser._id,
+         name: authUser.name,
+         email: authUser.email,
+         image: authUser.image,
+         role: authUser.role,
+      };
+      const add_rating = {
+         user,
+         count,
+      };
+      const findUser = await User.findById(authUser._id);
+      const filterUser = findUser.rating_post.filter(
+         (post) => post.postId == pid
+      );
+      if (filterUser.length === 0) {
+         await User.findByIdAndUpdate(authUser._id, {
+            $push: { rating_post: { postId: pid } },
+         });
+         await Post.findByIdAndUpdate(pid, {
+            $push: { given_rating: add_rating },
+         });
+      }
+
+      const { given_rating, total_rating } = await Post.findById(pid);
+
+      if (given_rating.length === 0) {
+         await Post.findByIdAndUpdate(pid, { total_rating: count * 2 });
+      } else {
+         const total_user = given_rating.length;
+         const get_total_rating = (total_rating / total_user) * 2;
+         await Post.findByIdAndUpdate(pid, { total_rating: get_total_rating });
+      }
+      const post = await Post.findById(pid);
+      res.status(200).json({
+         success: true,
+         message: "given rating",
+         resource: post,
+      });
+   }
+);
+
+router.put("/", auth, checkUser, async (req, res) => {
    if (res.locals.user.success === false) {
       return res.status(404).json({
          success: false,
@@ -108,7 +167,7 @@ router.put("/", auth, async (req, res) => {
       });
    }
    const { _id } = res.locals.user.user;
-   const { name, password, image, email, bookmark } = req.body;
+   const { name, password, image, email } = req.body;
    if (name) {
       await User.findByIdAndUpdate(_id, { name });
    } else if (password) {
@@ -118,22 +177,60 @@ router.put("/", auth, async (req, res) => {
       await User.findByIdAndUpdate(_id, { image });
    } else if (email) {
       await User.findByIdAndUpdate(_id, { email });
-   } else if (bookmark) {
-      await User.findByIdAndUpdate(_id, { bookmark });
    }
    const user = await User.findById(_id);
    res.status(200).json(user);
 });
 
-router.post("/:pid/comment", auth, async (req, res) => {
+router.put(
+   "/:pid/add-bookmark",
+   auth,
+   checkUser,
+   checkPost,
+   async (req, res) => {
+      const { pid } = req.params;
+      const { _id } = res.locals.user.user;
+      const user = await User.findById(_id);
+      if (user.bookmark.length > 0) {
+         if (!user.bookmark.includes(pid)) {
+            await User.findByIdAndUpdate(_id, { $push: { bookmark: pid } });
+         }
+      } else {
+         await User.findByIdAndUpdate(_id, { bookmark: pid });
+      }
+      const resultUser = await User.findById(_id);
+      res.status(200).json({
+         success: true,
+         message: "add post to bookmark",
+         resource: resultUser,
+      });
+   }
+);
+
+router.put(
+   "/:pid/remove-bookmark",
+   auth,
+   checkUser,
+   checkPost,
+   async (req, res) => {
+      const { pid } = req.params;
+      const { _id } = res.locals.user.user;
+      const user = await User.findById(_id);
+      const filterBookmark = user.bookmark.filter((p) => p !== pid);
+      await User.findByIdAndUpdate(_id, { bookmark: filterBookmark });
+      const resultUser = await User.findById(_id);
+      res.status(200).json({
+         success: true,
+         message: "remove post in bookmark",
+         resource: resultUser,
+      });
+   }
+);
+
+router.post("/:pid/comment", auth, checkUser, checkPost, async (req, res) => {
    const { pid } = req.params;
    const { user } = res.locals.user;
    const { comment } = req.body;
-   try {
-      await Post.findById(pid);
-   } catch (error) {
-      console.log(new Error(error).message);
-   }
 
    new Comment({
       post: pid,
@@ -157,22 +254,20 @@ router.post("/:pid/comment", auth, async (req, res) => {
       });
 });
 
-router.delete("/:pid/comment/:cid", auth, async (req, res) => {
-   const { pid, cid } = req.params;
-   try {
-      await Post.findById(pid);
-   } catch (error) {
-      res.status(404).json({
-         success: false,
-         message: "post not found!",
-      });
+router.delete(
+   "/:pid/comment/:cid",
+   auth,
+   checkPost,
+   checkUser,
+   async (req, res) => {
+      const { pid, cid } = req.params;
+
+      await Comment.findByIdAndDelete(cid);
+      res.status(204).json("deleted");
    }
+);
 
-   await Comment.findByIdAndDelete(cid);
-   res.status(204).json("deleted");
-});
-
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", auth, checkUser, async (req, res) => {
    if (res.locals.user.success === false) {
       return res.status(404).json({
          success: false,
