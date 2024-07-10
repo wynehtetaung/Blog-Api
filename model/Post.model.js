@@ -21,6 +21,10 @@ const postSchema = new schema({
    close_hour: {
       type: String,
    },
+   category: {
+      type: String,
+      required: true,
+   },
    given_rating: [
       {
          user: Object,
