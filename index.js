@@ -18,7 +18,7 @@ app.use("/api/posts", postRouter);
 app.use("/api/campaign", campaignRouter);
 
 mongoose
-   .connect(process.env.MONGO_ATLAS_STR)
+   .connect(process.env.MONGO_ATLAS_STR || process.env.MONGO_LOCAL_STR)
    .then(() => console.log("Connected mongodb!"))
    .catch((e) => console.log(e));
 

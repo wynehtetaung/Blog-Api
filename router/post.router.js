@@ -1,11 +1,11 @@
 const router = require("express").Router();
 const Post = require("../model/Post.model");
-const User = require("../model/User.model");
-const Campaign = require("../model/Campaign.model");
 const Comment = require("../model/Comment.model");
+const Carousel = require("../model/Carousel.model");
 const { auth } = require("../middleware/auth");
 const { checkPost } = require("../middleware/checkPost");
 const { checkUser } = require("../middleware/checkUser");
+const { admin } = require("../middleware/admin");
 
 router.get("/", async (req, res) => {
    const posts = await Post.aggregate([
@@ -44,6 +44,15 @@ router.get("/:id", checkPost, async (req, res) => {
       success: true,
       message: "post",
       resource: post,
+   });
+});
+
+router.get("/carousel/list", async (req, res) => {
+   const carousels = await Carousel.find().sort({ _id: -1 });
+   res.status(200).json({
+      success: true,
+      message: "carousel list",
+      resource: carousels,
    });
 });
 
@@ -90,6 +99,30 @@ router.post("/", auth, checkUser, async (req, res) => {
          return res.status(500).json({
             success: false,
             message: "post create fail!",
+            error: e,
+         });
+      });
+});
+
+router.post("/carousel", auth, checkUser, admin, async (req, res) => {
+   const { title, image, pid } = req.body;
+   new Carousel({
+      title,
+      image,
+      pid,
+   })
+      .save()
+      .then((result) => {
+         return res.status(201).json({
+            success: true,
+            message: "carousel created",
+            resource: result,
+         });
+      })
+      .catch((e) => {
+         res.status(500).json({
+            success: false,
+            message: "carousel create fail!",
             error: e,
          });
       });
@@ -153,6 +186,12 @@ router.delete("/:id", auth, checkUser, checkPost, async (req, res) => {
       await Comment.findByIdAndDelete(fc._id);
    });
    await Post.findByIdAndDelete(id);
+   res.status(204).json("deleted");
+});
+
+router.delete("/carousel/:id", auth, checkUser, admin, async (req, res) => {
+   const { id } = req.params;
+   await Carousel.findByIdAndDelete(id);
    res.status(204).json("deleted");
 });
 
