@@ -65,6 +65,8 @@ router.post("/", auth, checkUser, async (req, res) => {
       open_hour,
       close_hour,
       image,
+      latitude,
+      longitude,
       product_description,
       shop_description,
    } = req.body;
@@ -83,6 +85,8 @@ router.post("/", auth, checkUser, async (req, res) => {
       open_hour,
       close_hour,
       image,
+      latitude,
+      longitude,
       product_description,
       shop_description,
       owner: _id,

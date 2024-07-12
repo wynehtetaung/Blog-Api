@@ -49,6 +49,14 @@ const postSchema = new schema({
       type: schema.Types.ObjectId,
       ref: "users",
    },
+   latitude: {
+      type: Number,
+      default: 21.916222,
+   },
+   longitude: {
+      type: Number,
+      default: 95.955971,
+   },
    created: {
       type: Date,
       default: Date.now(),
