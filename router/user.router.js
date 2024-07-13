@@ -36,7 +36,7 @@ router.get("/list", async (req, res) => {
 });
 
 router.get("/verify", auth, checkUser, (req, res) => {
-   return res.json(res.locals.user);
+   return res.json({ data: res.locals.user });
 });
 
 router.post("/register", async (req, res) => {
