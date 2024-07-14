@@ -6,9 +6,24 @@ const { auth } = require("../middleware/auth");
 const { checkPost } = require("../middleware/checkPost");
 const { checkUser } = require("../middleware/checkUser");
 const { admin } = require("../middleware/admin");
+const { ObjectId } = require("mongodb");
 
 router.get("/", async (req, res) => {
-   const posts = await Post.aggregate([
+   const posts = await Post.find().sort({ _id: -1 });
+
+   res.status(200).json({
+      success: true,
+      message: "post list",
+      resource: posts,
+   });
+});
+
+router.get("/:id", checkPost, async (req, res) => {
+   const { id } = req.params;
+   const post = await Post.aggregate([
+      {
+         $match: { _id: new ObjectId(id) },
+      },
       {
          $lookup: {
             from: "users",
@@ -27,23 +42,11 @@ router.get("/", async (req, res) => {
       },
 
       { $unwind: "$owner" },
-      { $sort: { _id: -1 } },
    ]);
-
-   res.status(200).json({
-      success: true,
-      message: "post list",
-      resource: posts,
-   });
-});
-
-router.get("/:id", checkPost, async (req, res) => {
-   const { id } = req.params;
-   const post = await Post.findById(id);
    res.status(200).json({
       success: true,
       message: "post",
-      resource: post,
+      resource: post[0],
    });
 });
 
