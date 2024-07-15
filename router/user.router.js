@@ -165,13 +165,15 @@ router.put(
 
       const { given_rating, total_rating } = await Post.findById(pid);
 
-      if (given_rating.length === 0) {
-         await Post.findByIdAndUpdate(pid, { total_rating: count });
+      if (total_rating === 0) {
+         await Post.findByIdAndUpdate(pid, { total_rating: Number(count) });
       } else {
-         const total_user = given_rating.length;
-         const get_total_rating = total_rating / total_user;
+         const get_total_rating = (total_rating / given_rating.length).toFixed(
+            1
+         );
+
          await Post.findByIdAndUpdate(pid, {
-            total_rating: Number(get_total_rating.toFixed(1)),
+            total_rating: Number(get_total_rating),
          });
       }
       const post = await Post.findById(pid);
