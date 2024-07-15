@@ -39,6 +39,27 @@ router.get("/verify", auth, checkUser, (req, res) => {
    return res.json({ data: res.locals.user });
 });
 
+router.get("/comment", async (req, res) => {
+   const comments = await Comment.aggregate([
+      {
+         $lookup: {
+            from: "posts",
+            localField: "post",
+            foreignField: "_id",
+            as: "post",
+         },
+      },
+      {
+         $unwind: "$post",
+      },
+   ]);
+   return res.status(200).json({
+      success: true,
+      message: "comments lists",
+      resource: comments,
+   });
+});
+
 router.post("/register", async (req, res) => {
    const { name, email, password, image } = req.body;
    let role;
