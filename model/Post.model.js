@@ -42,6 +42,9 @@ const postSchema = new schema({
    product_description: {
       type: String,
    },
+   bookmark: {
+      type: Array,
+   },
    shop_description: {
       type: String,
    },

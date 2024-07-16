@@ -224,6 +224,7 @@ router.put(
       } else {
          await User.findByIdAndUpdate(_id, { bookmark: pid });
       }
+      await Post.findByIdAndUpdate(pid, { $push: { bookmark: _id } });
       const resultUser = await User.findById(_id);
       res.status(200).json({
          success: true,
@@ -244,6 +245,9 @@ router.put(
       const user = await User.findById(_id);
       const filterBookmark = user.bookmark.filter((p) => p !== pid);
       await User.findByIdAndUpdate(_id, { bookmark: filterBookmark });
+      const post = Post.findById(pid);
+      const filterPosts = post.bookmark.filter((p) => p !== _id);
+      await Post.findByIdAndUpdate(pid, { bookmark: filterPosts });
       const resultUser = await User.findById(_id);
       res.status(200).json({
          success: true,
