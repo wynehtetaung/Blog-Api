@@ -14,6 +14,10 @@ const carouselSchema = new schema({
       type: schema.Types.ObjectId,
       ref: "posts",
    },
+   created: {
+      type: Date,
+      default: Date.now(),
+   },
 });
 
 module.exports = mongoose.model("carousels", carouselSchema);
