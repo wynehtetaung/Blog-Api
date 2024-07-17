@@ -9,6 +9,9 @@ const campaignSchema = new schema({
    products: {
       type: Array,
    },
+   description: {
+      type: String,
+   },
    created: {
       type: Date,
       default: Date.now(),

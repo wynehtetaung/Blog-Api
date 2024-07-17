@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", auth, checkUser, admin, async (req, res) => {
    const posts = await Post.find();
-   const { title, post } = req.body;
+   const { title, post, description } = req.body;
    let setPost = [];
    (async () => {
       await post.map((p) => {
@@ -28,6 +28,7 @@ router.post("/", auth, checkUser, admin, async (req, res) => {
    new Campaign({
       title,
       products: setPost,
+      description,
    })
       .save()
       .then((result) => {
@@ -48,7 +49,7 @@ router.post("/", auth, checkUser, admin, async (req, res) => {
 
 router.put("/:id", auth, checkUser, admin, async (req, res) => {
    const { id } = req.params;
-   const { title, post } = req.body;
+   const { title, post, description } = req.body;
 
    if (title) {
       await Campaign.findByIdAndUpdate(id, { title });
@@ -61,6 +62,8 @@ router.put("/:id", auth, checkUser, admin, async (req, res) => {
          });
       })();
       await Campaign.findByIdAndUpdate(id, { products: setPost });
+   } else if (description) {
+      await Campaign.findByIdAndUpdate(id, { description });
    }
 
    const campaigns = await Campaign.findById(id);
