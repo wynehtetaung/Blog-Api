@@ -113,6 +113,10 @@ router.post("/login", async (req, res) => {
          role: findUser.role,
          image: findUser.image,
       };
+
+      await User.findByIdAndUpdate(findUser._id, {
+         login_date: Date.now(),
+      });
       if (await bcrypt.compare(password, findUser.password)) {
          const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY, {
             expiresIn: "24h",

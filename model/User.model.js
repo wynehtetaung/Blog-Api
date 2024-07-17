@@ -37,6 +37,10 @@ const UserSchema = new schema({
       type: Date,
       default: Date.now(),
    },
+   login_date: {
+      type: Date,
+      default: Date.now(),
+   },
 });
 
 module.exports = mongoose.model("users", UserSchema);
