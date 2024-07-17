@@ -33,6 +33,10 @@ const UserSchema = new schema({
       type: String,
       required: true,
    },
+   created: {
+      type: Date,
+      default: Date.now(),
+   },
 });
 
 module.exports = mongoose.model("users", UserSchema);
