@@ -192,9 +192,11 @@ router.delete("/:id", auth, checkUser, checkPost, async (req, res) => {
    filterComment.map(async (fc) => {
       await Comment.findByIdAndDelete(fc._id);
    });
-   const carousels = await Carousel.find();
-   const filterCarousel = carousels.find((carousel) => carousel.pid === id);
-   await Carousel.findByIdAndDelete(filterCarousel._id);
+   // const carousels = await Carousel.find();
+   // const filterCarousel = carousels.find((carousel) => carousel.pid == id);
+   // if (filterCarousel !== undefined) {
+   //    await Carousel.findByIdAndDelete(filterCarousel._id);
+   // }
    await Post.findByIdAndDelete(id);
    res.status(204).json("deleted");
 });

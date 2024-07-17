@@ -245,7 +245,7 @@ router.put(
       const user = await User.findById(_id);
       const filterBookmark = user.bookmark.filter((p) => p !== pid);
       await User.findByIdAndUpdate(_id, { bookmark: filterBookmark });
-      const post = Post.findById(pid);
+      const post = await Post.findById(pid);
       const filterPosts = post.bookmark.filter((p) => p !== _id);
       await Post.findByIdAndUpdate(pid, { bookmark: filterPosts });
       const resultUser = await User.findById(_id);
