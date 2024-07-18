@@ -172,9 +172,10 @@ router.put(
       if (total_rating === 0) {
          await Post.findByIdAndUpdate(pid, { total_rating: Number(count) });
       } else {
-         const get_total_rating = (total_rating / given_rating.length).toFixed(
-            1
-         );
+         const get_total_rating = (
+            (total_rating + count) /
+            given_rating.length
+         ).toFixed(1);
 
          await Post.findByIdAndUpdate(pid, {
             total_rating: Number(get_total_rating),
